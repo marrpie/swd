@@ -67,6 +67,41 @@ public class DynamicProgramming {
      * @param args the command line arguments
      */
     
+    public String getArrivalCity ()
+    {
+        return arrivalCity;
+    }
+    
+    public String getDepartureCity()
+    {
+        return departureCity;
+    }
+    
+    public long getTimeForQuery()
+    {
+        return shortestTimeFromCityToDestination[cities.indexOf(departureCity)];
+    }
+    
+    public ArrayList<String> getRoute()
+    {
+        int i=0;
+        ArrayList<String> route = new ArrayList();
+        i=cities.indexOf(departureCity);
+        if (shortestTimeFromCityToDestination[cities.indexOf(departureCity)] == Long.MAX_VALUE)
+        {
+            return route;
+        }
+        else
+        {
+            route.add(cities.get(i));
+            while (cities.indexOf(nextCity[i]) != i )
+            {
+                route.add(nextCity[i]);
+                i=cities.indexOf(nextCity[i]);
+            }
+        }
+        return route;
+    }
     void readGraph (String scheduleName)
     {
         File schedule = new File(scheduleName);
@@ -81,7 +116,8 @@ public class DynamicProgramming {
                 // reading city names into list of cities
                 line = f1.readLine();
                 Pattern space = Pattern.compile(" ");
-                cities =new ArrayList (Arrays.asList(space.split(line)));
+                Pattern comma = Pattern.compile(",");
+                cities =new ArrayList (Arrays.asList(comma.split(line)));
                 
                 graph = new Edge[cities.size()][cities.size()];
                 nextCity = new String[cities.size()];
@@ -107,7 +143,7 @@ public class DynamicProgramming {
                                  // record[3] - String : timeOfArrival
                 while ((line = f1.readLine()) != null)
                 {
-                    record = space.split(line);
+                    record = comma.split(line);
                     int dIndex = -1;
                     int aIndex = -1;
                     if (((dIndex = cities.indexOf(record[0])) != -1) && (aIndex = cities.indexOf(record[1])) != -1 )   
@@ -119,7 +155,7 @@ public class DynamicProgramming {
                     }
                     else
                     {
-                        throw(new Exception("No such city in the graph error"));
+                        throw(new Exception("No such city in the graph while parsing train.txt error"));
                     }
                     }
             } catch (Exception e)
@@ -136,9 +172,16 @@ public class DynamicProgramming {
         long milis = shortestTimeFromCityToDestination[cities.indexOf(departureCity)];
         long mins = (milis%hour)/min;
         long hours = (milis - (milis%hour))/hour;
-        System.out.println("Podroz zajela "+hours+" godzin i " + mins + " minut.");
+        if (shortestTimeFromCityToDestination[cities.indexOf(departureCity)] == Long.MAX_VALUE)
+        {
+            System.out.println("Nie ma polaczenia miedzy tymi miastami");
+        }
+        else
+        {
+            System.out.println("Podroz zajela "+hours+" godzin i " + mins + " minut.");
+        }
     }
-    public void dynamicProgrammingAlgorith(String cityOfDeparture, String cityOfArrival)
+    public void dynamicProgrammingAlgorithm(String cityOfDeparture, String cityOfArrival)
     {
         departureCity = cityOfDeparture;
         arrivalCity = cityOfArrival;
@@ -233,8 +276,14 @@ public class DynamicProgramming {
     public static void main(String[] args) {
         DynamicProgramming alg = new DynamicProgramming();
         alg.readGraph("train.txt");
-        alg.dynamicProgrammingAlgorith("Olsztyn", "ZielonaGora");
+        alg.dynamicProgrammingAlgorithm("Olsztyn", "Zielona Gora");
         alg.printTripTime();
+        ArrayList<String> route = new ArrayList();
+        route = alg.getRoute();
+        for ( String x : route)
+        {
+            System.out.println(x);
+        }
     }
     
 }
