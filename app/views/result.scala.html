@@ -18,6 +18,7 @@
                 <span class="toCity">@to</span>
             </div>
             <div class="bottom-block">
+                @if(mins!=0) {
                 <div class="time">
                     <span class="title">Czas podróży:</span>
                     <div style="margin-top: 20px">
@@ -34,6 +35,11 @@
                         </div>
                     }
                 </div>
+                } else {
+                    <div>
+                        <span style="font-size: 17px">Nie ma połączenia pomiędzy tymi miastami</span>
+                    </div>
+                }
                 <div class="btn-block">
                     <a class="btn btn-primary" type="button" href="@routes.Application.index()">Strona główna</a>
                 </div>

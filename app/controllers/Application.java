@@ -8,12 +8,17 @@ public class Application extends Controller {
 
     public Result search(String from, String to) {
         DynamicProgramming.getInstance().dynamicProgrammingAlgorithm(from, to);
-        long milis = DynamicProgramming.getInstance().printTripTime();
-        long hour = 1000*60*60;
-        long min = 1000*60;
-        Long mins = (milis%hour)/min;
-        Long hours = (milis - (milis%hour))/hour;
-        return ok(views.html.result.render(from, to, DynamicProgramming.getInstance().getRoute(), mins, hours));
+        if(DynamicProgramming.getInstance().printTripTime()!=null)
+        {
+            long milis = DynamicProgramming.getInstance().printTripTime();
+            long hour = 1000 * 60 * 60;
+            long min = 1000 * 60;
+            Long mins = (milis % hour) / min;
+            Long hours = (milis - (milis % hour)) / hour;
+            return ok(views.html.result.render(from, to, DynamicProgramming.getInstance().getRoute(), mins, hours));
+        } else {
+            return ok(views.html.result.render(from, to, DynamicProgramming.getInstance().getRoute(), 0L, 0L));
+        }
     }
 
     public static Result index() {
