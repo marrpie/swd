@@ -52,9 +52,8 @@
 
 .container .bottom-block .btn-block {
     margin-top: 50px;
-    padding-right: 80px;
-    padding-top: 60px;
 }
 .container .bottom-block .btn-block a {
     float: right;
+    margin-right: 100px;
 }
