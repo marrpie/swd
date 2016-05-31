@@ -1,18 +1,7 @@
 package controllers;
 
-import models.trainConnectionModel;
-import services.trainConnectionService;
 import dynamicprogramming.DynamicProgramming;
-import play.*;
 import play.mvc.*;
-
-import views.html.*;
-
-import javax.inject.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class Application extends Controller {
 
@@ -29,9 +18,6 @@ public class Application extends Controller {
 
     public static Result index() {
         DynamicProgramming.getInstance().readGraph("train.txt");
-/*        alg.readGraph("train.txt");
-        alg.dynamicProgrammingAlgorith("Olsztyn", "ZielonaGora");
-        alg.printTripTime();*/
 
         return ok(views.html.index.render("ko", DynamicProgramming.getInstance().getCities()));
     }
