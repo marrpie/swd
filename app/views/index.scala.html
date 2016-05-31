@@ -1,14 +1,76 @@
-@(message: String, lists: List[trainConnectionModel])
+@(message: String, lists: List[String])
 
 <!DOCTYPE html>
 
 <html>
     <head>
+        <script src="@routes.Assets.at("javascripts/jquery-1.11.0.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
 
-    </head>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/index.css")">
+     </head>
+    <script type="text/javascript">
+        $(function() {
+            $("#fromItems li a").click(function () {
+                $("#stationFrom").text($(this).text());
+            });
+            $("#toItems li a").click(function () {
+                $("#stationTo").text($(this).text());
+            });
+
+
+        });
+
+        function searchConnection() {
+            var from = $("#stationFrom").text();
+            var to = $("#stationTo").text();
+
+            window.location = "/search?from="+from + "&to=" + to;
+        }
+    </script>
     <body>
-        <div style="width: 1000px; border: 1px solid black;">
-            <h5>message</h5>
+        <div class="container">
+            <div class="top">
+                <section class="dropdown-section">
+                    <div>Stacja początkowa</div>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="stationFrom" data-toggle="dropdown">
+                            Wybierz stacje
+                            <span class="caret"></span>
+                        </button>
+                        <ul id="fromItems" class="dropdown-menu" role="menu" aria-labelledby="stationFrom">
+                            @for(from <- lists) {
+                                <li><a role="menuitem" tabindex="-1" href="#">@from</a></li>
+                            }
+                        </ul>
+                    </div>
+                </section>
+                <section class="dropdown-section">
+                    <div>Stacja końcowa</div>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="stationTo" data-toggle="dropdown">
+                            Wybierz stacje
+                            <span class="caret"></span>
+                        </button>
+                        <ul id="toItems" class="dropdown-menu" role="menu" aria-labelledby="stationFrom">
+                            @for(from <- lists) {
+                                <li><a role="menuitem" tabindex="-1" href="#">@from</a></li>
+                            }
+                        </ul>
+                    </div>
+                </section>
+                <section class="buttons">
+                    <button class="btn btn-primary" type="button" onclick="searchConnection()">
+                        Szukaj
+                    </button>
+                </section>
+            </div>
+            <div class="bottom">
+                <section class="title">
+                    <img src="@routes.Assets.at("images/train.jpg")" />
+                </section>
+            </div>
         </div>
     </body>
 </html>

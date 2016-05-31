@@ -1,0 +1,43 @@
+@(from: String, to: String, lists: List[String], mins:Long, hours:Long)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script src="@routes.Assets.at("javascripts/jquery-1.11.0.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/result.css")">
+    </head>
+    <body>
+        <div class="container">
+            <div class="top-block">
+                <span>@from</span>
+                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                <span class="toCity">@to</span>
+            </div>
+            <div class="bottom-block">
+                <div class="time">
+                    <span class="title">Czas podróży:</span>
+                    <div style="margin-top: 20px">
+                        <span>@hours H</span>
+                        <span>@mins Min</span>
+                    </div>
+                </div>
+                <div class="cities">
+                    <span class="title">Trasa:</span>
+                    @for(city <- lists) {
+                        <div>
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span>@city</span>
+                        </div>
+                    }
+                </div>
+                <div class="btn-block">
+                    <a class="btn btn-primary" type="button" href="@routes.Application.index()">Strona główna</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

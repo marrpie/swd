@@ -5,6 +5,7 @@
  */
 package dynamicprogramming;
 
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,38 +24,45 @@ import java.util.Arrays;
  *
  * @author Tomek
  */
+
 public class DynamicProgramming {
+
+    private static DynamicProgramming instance = new DynamicProgramming();
+
+    public static DynamicProgramming getInstance() {
+        return instance;
+    }
 
     class Edge {
         final long departure;
         final long arrival;
-        
+
         public Edge (String departureTime, String arrivalTime) throws Exception
         {
             String[] time;
             if (departureTime.contains(":") && arrivalTime.contains(":"))
-                        {
-                            time = departureTime.split(":");
-                        
-                            if ((Integer.parseInt(time[0]) <= 24 && Integer.parseInt(time[0]) >= 0) && (Integer.parseInt(time[1]) >= 0 && Integer.parseInt(time[1]) < 60))
-                            {
-                            
-                                departure = Integer.parseInt(time[0])*60*60*1000+Integer.parseInt(time[1])*60*1000;
-                                time = arrivalTime.split(":");
-                                arrival = Integer.parseInt(time[0])*60*60*1000+Integer.parseInt(time[1])*60*1000;
-                            }
-                            else
-                            {
-                                throw (new Exception("Exceeded time format error"));
-                            }
-                        }
-                        else
-                        {
-                            throw (new Exception("Wrong time format error"));
-                        }
+            {
+                time = departureTime.split(":");
+
+                if ((Integer.parseInt(time[0]) <= 24 && Integer.parseInt(time[0]) >= 0) && (Integer.parseInt(time[1]) >= 0 && Integer.parseInt(time[1]) < 60))
+                {
+
+                    departure = Integer.parseInt(time[0])*60*60*1000+Integer.parseInt(time[1])*60*1000;
+                    time = arrivalTime.split(":");
+                    arrival = Integer.parseInt(time[0])*60*60*1000+Integer.parseInt(time[1])*60*1000;
+                }
+                else
+                {
+                    throw (new Exception("Exceeded time format error"));
+                }
+            }
+            else
+            {
+                throw (new Exception("Wrong time format error"));
+            }
         }
     }
-    
+
     private Edge[][] graph;
     private ArrayList<String> cities;
     private String[] nextCity; // Array stores information about the next city to go from city mapped as array index
@@ -63,25 +71,38 @@ public class DynamicProgramming {
     private int recursionDepth = 0;
     private String departureCity;
     private String arrivalCity;
+
+    public ArrayList<String> getCities()
+    {
+        return cities;
+    }
+
+    public Long[] getShortestTimeFromCityToDestination()
+    {
+        return shortestTimeFromCityToDestination;
+    }
+
     /**
      * @param args the command line arguments
      */
-    
+
+
+
     public String getArrivalCity ()
     {
         return arrivalCity;
     }
-    
+
     public String getDepartureCity()
     {
         return departureCity;
     }
-    
+
     public long getTimeForQuery()
     {
         return shortestTimeFromCityToDestination[cities.indexOf(departureCity)];
     }
-    
+
     public ArrayList<String> getRoute()
     {
         int i=0;
@@ -102,7 +123,7 @@ public class DynamicProgramming {
         }
         return route;
     }
-    void readGraph (String scheduleName)
+    public void readGraph (String scheduleName)
     {
         File schedule = new File(scheduleName);
         if(schedule.exists())
@@ -112,41 +133,41 @@ public class DynamicProgramming {
             try
             {
                 f1 = new BufferedReader(new FileReader(schedule));
-                
+
                 // reading city names into list of cities
                 line = f1.readLine();
                 Pattern space = Pattern.compile(" ");
                 Pattern comma = Pattern.compile(",");
                 cities =new ArrayList (Arrays.asList(comma.split(line)));
-                
+
                 graph = new Edge[cities.size()][cities.size()];
                 nextCity = new String[cities.size()];
                 shortestTimeFromCityToDestination = new Long[cities.size()];
-                
+
                 // initialize V table and table of next cities (predecesstors in inverted order)
                 for (int i=0;i<cities.size();i++)
                 {
                     shortestTimeFromCityToDestination[i] = Long.MAX_VALUE;
-                    nextCity[i] = null;      
+                    nextCity[i] = null;
                 }
-                
+
                 for ( int i=0; i<cities.size();i++)
                 {
                     graph[i][i] = new Edge("0:0","0:0"); // There is 0 distance from departure to arrival in the same city
                 }
-                
+
                 // Reading schedule into graph
                 String[] record; // Stores splitted string from line in the file
-                                 // record[0] - String : cityOfDeparture
-                                 // record[1] - String : cityOfArrival 
-                                 // record[2] - String : timeOfDeparture
-                                 // record[3] - String : timeOfArrival
+                // record[0] - String : cityOfDeparture
+                // record[1] - String : cityOfArrival
+                // record[2] - String : timeOfDeparture
+                // record[3] - String : timeOfArrival
                 while ((line = f1.readLine()) != null)
                 {
                     record = comma.split(line);
                     int dIndex = -1;
                     int aIndex = -1;
-                    if (((dIndex = cities.indexOf(record[0])) != -1) && (aIndex = cities.indexOf(record[1])) != -1 )   
+                    if (((dIndex = cities.indexOf(record[0])) != -1) && (aIndex = cities.indexOf(record[1])) != -1 )
                     {
                         if (graph[dIndex][aIndex] == null)
                         {
@@ -157,15 +178,15 @@ public class DynamicProgramming {
                     {
                         throw(new Exception("No such city in the graph while parsing train.txt error"));
                     }
-                    }
+                }
             } catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
     }
-    
-    public void printTripTime()
+
+    public Long printTripTime()
     {
         long hour = 1000*60*60;
         long min = 1000*60;
@@ -174,11 +195,11 @@ public class DynamicProgramming {
         long hours = (milis - (milis%hour))/hour;
         if (shortestTimeFromCityToDestination[cities.indexOf(departureCity)] == Long.MAX_VALUE)
         {
-            System.out.println("Nie ma polaczenia miedzy tymi miastami");
+            return null;
         }
         else
         {
-            System.out.println("Podroz zajela "+hours+" godzin i " + mins + " minut.");
+            return milis;
         }
     }
     public void dynamicProgrammingAlgorithm(String cityOfDeparture, String cityOfArrival)
@@ -188,7 +209,7 @@ public class DynamicProgramming {
         visitedNodes = new ArrayList();
         recursionDepth = 0;
         findShortestPath(cityOfDeparture,cityOfArrival);
-        
+
     }
     private void findShortestPath(String cityOfDeparture, String cityOfArrival) // cityOfDeparture - startCity, cityOfArrival - endCity
     {
@@ -209,7 +230,7 @@ public class DynamicProgramming {
                     nextCity[aIndex] = cities.get(cities.indexOf(cityOfArrival));
                     shortestTimeFromCityToDestination[aIndex] = 0l;
                 }
-                
+
                 if ( cityOfDeparture.equals(cityOfArrival))
                 {
                     return;
@@ -220,10 +241,10 @@ public class DynamicProgramming {
                     {
                         int indexOfNextCity = cities.indexOf(nextCity[cities.indexOf(cityOfArrival)]); // index of city where one should go from present city
                         int cityIndex = cities.indexOf(cityOfArrival);
-                        
+
                         if (graph[i][cityIndex] == null || i == cities.indexOf(cityOfArrival))
                             continue;
-                        
+
                         if (cityIndex != indexOfNextCity)
                         {
                             long directDistance = graph[i][cityIndex].arrival - graph[i][cityIndex].departure;
@@ -242,7 +263,7 @@ public class DynamicProgramming {
                         {
                             distance += 24*60*60*1000; // Adding next day to distance
                         }
-                        
+
                         if (distance + shortestTimeFromCityToDestination[cityIndex] < shortestTimeFromCityToDestination[i])
                         {
                             shortestTimeFromCityToDestination[i] = distance + shortestTimeFromCityToDestination[cityIndex];
@@ -257,7 +278,7 @@ public class DynamicProgramming {
                     {
                         recursionDepth++;
                         findShortestPath(cityOfDeparture, cityToAnalyse);
-                    }                    
+                    }
                 }
             }
             else
@@ -272,18 +293,4 @@ public class DynamicProgramming {
         //visitedNodes = new ArrayList();
         return;
     }
-    
-    public static void main(String[] args) {
-        DynamicProgramming alg = new DynamicProgramming();
-        alg.readGraph("train.txt");
-        alg.dynamicProgrammingAlgorithm("Olsztyn", "Zielona Gora");
-        alg.printTripTime();
-        ArrayList<String> route = new ArrayList();
-        route = alg.getRoute();
-        for ( String x : route)
-        {
-            System.out.println(x);
-        }
-    }
-    
 }
