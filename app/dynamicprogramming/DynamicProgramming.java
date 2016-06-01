@@ -5,6 +5,8 @@
  */
 package dynamicprogramming;
 
+import models.TrainConnection;
+
 import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,6 +38,28 @@ public class DynamicProgramming {
     class Edge {
         final long departure;
         final long arrival;
+        final String from;
+        final String to;
+
+        public String getFrom()
+        {
+            return from;
+        }
+
+        public String getTo()
+        {
+            return to;
+        }
+
+        public long getDeparture()
+        {
+            return departure;
+        }
+
+        public long getArrival()
+        {
+            return arrival;
+        }
 
         public Edge (String departureTime, String arrivalTime) throws Exception
         {
@@ -50,6 +74,8 @@ public class DynamicProgramming {
                     departure = Integer.parseInt(time[0])*60*60*1000+Integer.parseInt(time[1])*60*1000;
                     time = arrivalTime.split(":");
                     arrival = Integer.parseInt(time[0])*60*60*1000+Integer.parseInt(time[1])*60*1000;
+                    from = departureTime;
+                    to = arrivalTime;
                 }
                 else
                 {
@@ -101,6 +127,30 @@ public class DynamicProgramming {
     public long getTimeForQuery()
     {
         return shortestTimeFromCityToDestination[cities.indexOf(departureCity)];
+    }
+
+    public ArrayList<TrainConnection> getTrainConnections() {
+        ArrayList<TrainConnection> lists = new ArrayList<>();
+
+        for(int i=0; i<getCities().size(); i++) {
+            for(int j=0; j<getCities().size(); j++)
+            {
+                if (DynamicProgramming.getInstance().graph[i][j] != null && DynamicProgramming.getInstance().graph[i][j].getArrival() != 0)
+                {
+                    System.out.println(DynamicProgramming.getInstance().graph[i][j].getFrom() + " - " + DynamicProgramming.getInstance().graph[i][j].getTo());
+                    lists.add(
+                            new TrainConnection(
+                                    getCities().get(i),
+                                    DynamicProgramming.getInstance().graph[i][j].getFrom(),
+                                    getCities().get(j),
+                                    DynamicProgramming.getInstance().graph[i][j].getTo()
+                            )
+                    );
+                }
+            }
+        }
+
+        return lists;
     }
 
     public ArrayList<String> getRoute()

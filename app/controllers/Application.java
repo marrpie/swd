@@ -3,6 +3,8 @@ package controllers;
 import dynamicprogramming.DynamicProgramming;
 import play.mvc.*;
 
+import java.util.List;
+
 public class Application extends Controller {
 
 
@@ -19,6 +21,11 @@ public class Application extends Controller {
         } else {
             return ok(views.html.result.render(from, to, DynamicProgramming.getInstance().getRoute(), 0L, 0L));
         }
+    }
+
+    public static Result trainsConnection() {
+        ;
+        return ok(views.html.timetable.render(DynamicProgramming.getInstance().getTrainConnections()));
     }
 
     public static Result index() {

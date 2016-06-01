@@ -1,0 +1,17 @@
+.container {
+    width: 80%;
+    height: 80%;
+    border: 2px solid #e6e6e6;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.container .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container .title a {
+    height: 10%;
+}

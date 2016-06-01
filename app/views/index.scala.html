@@ -60,16 +60,19 @@
                         </ul>
                     </div>
                 </section>
-                <section class="buttons">
-                    <button class="btn btn-primary" type="button" onclick="searchConnection()">
-                        Szukaj
-                    </button>
-                </section>
             </div>
             <div class="bottom">
                 <section class="title">
                     <img src="@routes.Assets.at("images/train.jpg")" />
                 </section>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-primary" type="button" onclick="searchConnection()">
+                    Szukaj
+                </button>
+                <a class="btn btn-primary" href="@routes.Application.trainsConnection()">
+                    Rozkład jazdy
+                </a>
             </div>
         </div>
     </body>
