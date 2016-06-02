@@ -10,16 +10,16 @@ public class Application extends Controller {
 
     public Result search(String from, String to) {
         DynamicProgramming.getInstance().dynamicProgrammingAlgorithm(from, to);
-        if(DynamicProgramming.getInstance().printTripTime()!=null)
+        if(DynamicProgramming.getInstance().printTripTime()!=-1L)
         {
             long milis = DynamicProgramming.getInstance().printTripTime();
             long hour = 1000 * 60 * 60;
             long min = 1000 * 60;
             Long mins = (milis % hour) / min;
             Long hours = (milis - (milis % hour)) / hour;
-            return ok(views.html.result.render(from, to, DynamicProgramming.getInstance().getRoute(), mins, hours));
+            return ok(views.html.result.render(from, to, DynamicProgramming.getInstance().getRouteTr(), mins, hours));
         } else {
-            return ok(views.html.result.render(from, to, DynamicProgramming.getInstance().getRoute(), 0L, 0L));
+            return ok(views.html.result.render(from, to, DynamicProgramming.getInstance().getRouteTr(), -1L, -1L));
         }
     }
 

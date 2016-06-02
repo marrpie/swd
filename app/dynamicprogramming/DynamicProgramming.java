@@ -92,6 +92,7 @@ public class DynamicProgramming {
     private Edge[][] graph;
     private ArrayList<String> cities;
     private String[] nextCity; // Array stores information about the next city to go from city mapped as array index
+    private TrainConnection[] nextCityTmp;
     private Long[] shortestTimeFromCityToDestination; // contains most recently calculated information about shortest time
     private ArrayList<String> visitedNodes = new ArrayList();
     private int recursionDepth = 0;
@@ -107,10 +108,6 @@ public class DynamicProgramming {
     {
         return shortestTimeFromCityToDestination;
     }
-
-    /**
-     * @param args the command line arguments
-     */
 
 
 
@@ -167,8 +164,30 @@ public class DynamicProgramming {
             route.add(cities.get(i));
             while (cities.indexOf(nextCity[i]) != i )
             {
+                System.out.println("DSZDSDSSDDS: " + nextCityTmp[i].getFrom() + " - " + nextCityTmp[i].getFromTime() + " - " + nextCityTmp[i].getTo() + " - " + nextCityTmp[i].getToTime());
                 route.add(nextCity[i]);
                 i=cities.indexOf(nextCity[i]);
+            }
+        }
+        return route;
+    }
+    public ArrayList<TrainConnection> getRouteTr()
+    {
+        int i=0;
+        ArrayList<TrainConnection> route = new ArrayList();
+        i=cities.indexOf(departureCity);
+        if (shortestTimeFromCityToDestination[cities.indexOf(departureCity)] == Long.MAX_VALUE)
+        {
+            return route;
+        }
+        else
+        {
+            while (cities.indexOf(nextCity[i]) != i )
+            {
+                System.out.println("DSZDSDSSDDS: " + nextCityTmp[i].getFrom() + " - " + nextCityTmp[i].getFromTime() + " - " + nextCityTmp[i].getTo() + " - " + nextCityTmp[i].getToTime());
+
+                route.add(nextCityTmp[i]);
+                i=cities.indexOf(nextCityTmp[i].getTo());
             }
         }
         return route;
@@ -192,6 +211,7 @@ public class DynamicProgramming {
 
                 graph = new Edge[cities.size()][cities.size()];
                 nextCity = new String[cities.size()];
+                nextCityTmp = new TrainConnection[cities.size()];
                 shortestTimeFromCityToDestination = new Long[cities.size()];
 
                 // initialize V table and table of next cities (predecesstors in inverted order)
@@ -199,6 +219,8 @@ public class DynamicProgramming {
                 {
                     shortestTimeFromCityToDestination[i] = Long.MAX_VALUE;
                     nextCity[i] = null;
+                    nextCityTmp[i] = null;
+
                 }
 
                 for ( int i=0; i<cities.size();i++)
@@ -245,7 +267,7 @@ public class DynamicProgramming {
         long hours = (milis - (milis%hour))/hour;
         if (shortestTimeFromCityToDestination[cities.indexOf(departureCity)] == Long.MAX_VALUE)
         {
-            return null;
+            return -1L;
         }
         else
         {
@@ -278,7 +300,9 @@ public class DynamicProgramming {
                 if (recursionDepth == 0)
                 {
                     nextCity[aIndex] = cities.get(cities.indexOf(cityOfArrival));
+                    nextCityTmp[aIndex] = new TrainConnection(cities.get(aIndex), graph[aIndex][cities.indexOf(cityOfArrival)].getFrom(),cities.get(cities.indexOf(cityOfArrival)), graph[aIndex][cities.indexOf(cityOfArrival)].getTo());
                     shortestTimeFromCityToDestination[aIndex] = 0l;
+
                 }
 
                 if ( cityOfDeparture.equals(cityOfArrival))
@@ -318,6 +342,8 @@ public class DynamicProgramming {
                         {
                             shortestTimeFromCityToDestination[i] = distance + shortestTimeFromCityToDestination[cityIndex];
                             nextCity[i] = cities.get(cityIndex);
+                            nextCityTmp[i] = new TrainConnection(cities.get(i), graph[i][cityIndex].getFrom(),cities.get(cityIndex), graph[i][cityIndex].getTo());
+
                         }
                         if (!visitedNodes.contains(cities.get(i)))
                         {

@@ -1,4 +1,4 @@
-@(from: String, to: String, lists: List[String], mins:Long, hours:Long)
+@(from: String, to: String, lists: List[TrainConnection], mins:Long, hours:Long)
 
 <!DOCTYPE html>
 
@@ -18,7 +18,7 @@
                 <span class="toCity">@to</span>
             </div>
             <div class="bottom-block">
-                @if(mins!=0) {
+                @if(mins!=(-1)) {
                 <div class="time">
                     <span class="title">Czas podróży:</span>
                     <div style="margin-top: 20px">
@@ -31,7 +31,10 @@
                     @for(city <- lists) {
                         <div>
                             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                            <span>@city</span>
+                            <span>@city.getFrom()</span>
+                            <span>@city.getTo()</span>
+                            <span>@city.getFromTime()</span>
+                            <span>@city.getToTime()</span>
                         </div>
                     }
                 </div>
