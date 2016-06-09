@@ -164,7 +164,6 @@ public class DynamicProgramming {
             route.add(cities.get(i));
             while (cities.indexOf(nextCity[i]) != i )
             {
-                System.out.println("DSZDSDSSDDS: " + nextCityTmp[i].getFrom() + " - " + nextCityTmp[i].getFromTime() + " - " + nextCityTmp[i].getTo() + " - " + nextCityTmp[i].getToTime());
                 route.add(nextCity[i]);
                 i=cities.indexOf(nextCity[i]);
             }
@@ -184,8 +183,6 @@ public class DynamicProgramming {
         {
             while (cities.indexOf(nextCity[i]) != i )
             {
-                System.out.println("DSZDSDSSDDS: " + nextCityTmp[i].getFrom() + " - " + nextCityTmp[i].getFromTime() + " - " + nextCityTmp[i].getTo() + " - " + nextCityTmp[i].getToTime());
-
                 route.add(nextCityTmp[i]);
                 i=cities.indexOf(nextCityTmp[i].getTo());
             }
