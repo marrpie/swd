@@ -89,6 +89,37 @@ public class DynamicProgramming {
         }
     }
 
+    class State {
+        private int indexOfCity;
+        private String timeOfArrival;
+
+        public State(int indexOfCity, String timeOfArrival)
+        {
+            this.indexOfCity = indexOfCity;
+            this.timeOfArrival = timeOfArrival;
+        }
+
+        public int getIndexOfCity()
+        {
+            return indexOfCity;
+        }
+
+        public void setIndexOfCity(int indexOfCity)
+        {
+            this.indexOfCity = indexOfCity;
+        }
+
+        public String getTimeOfArrival()
+        {
+            return timeOfArrival;
+        }
+
+        public void setTimeOfArrival(String timeOfArrival)
+        {
+            this.timeOfArrival = timeOfArrival;
+        }
+    }
+
     private Edge[][] graph;
     private ArrayList<String> cities;
     private String[] nextCity; // Array stores information about the next city to go from city mapped as array index
@@ -98,6 +129,7 @@ public class DynamicProgramming {
     private int recursionDepth = 0;
     private String departureCity;
     private String arrivalCity;
+    private State[] state;
 
     public ArrayList<String> getCities()
     {
@@ -108,8 +140,6 @@ public class DynamicProgramming {
     {
         return shortestTimeFromCityToDestination;
     }
-
-
 
     public String getArrivalCity ()
     {
@@ -208,6 +238,7 @@ public class DynamicProgramming {
 
                 graph = new Edge[cities.size()][cities.size()];
                 nextCity = new String[cities.size()];
+                state = new State[cities.size()];
                 nextCityTmp = new TrainConnection[cities.size()];
                 shortestTimeFromCityToDestination = new Long[cities.size()];
 
@@ -217,7 +248,7 @@ public class DynamicProgramming {
                     shortestTimeFromCityToDestination[i] = Long.MAX_VALUE;
                     nextCity[i] = null;
                     nextCityTmp[i] = null;
-
+                    state[i] = null;
                 }
 
                 for ( int i=0; i<cities.size();i++)
@@ -301,7 +332,13 @@ public class DynamicProgramming {
                     shortestTimeFromCityToDestination[aIndex] = 0l;
 
                 }
-
+                if(state[cities.indexOf(cityOfArrival)] != null)
+                {
+                    if (dIndex == state[cities.indexOf(cityOfArrival)].getIndexOfCity())
+                    {
+                        return;
+                    }
+                }
                 if ( cityOfDeparture.equals(cityOfArrival))
                 {
                     return;
@@ -340,7 +377,8 @@ public class DynamicProgramming {
                             shortestTimeFromCityToDestination[i] = distance + shortestTimeFromCityToDestination[cityIndex];
                             nextCity[i] = cities.get(cityIndex);
                             nextCityTmp[i] = new TrainConnection(cities.get(i), graph[i][cityIndex].getFrom(),cities.get(cityIndex), graph[i][cityIndex].getTo());
-
+                            System.out.println("STATE: " + state.length + " - " + i + " " + cities.get(cityIndex) + " - " +  graph[i][cityIndex].getTo());
+                            state[i] = new State(i, graph[i][cityIndex].getTo());
                         }
                         if (!visitedNodes.contains(cities.get(i)))
                         {
