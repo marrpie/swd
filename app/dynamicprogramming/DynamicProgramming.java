@@ -377,7 +377,6 @@ public class DynamicProgramming {
                             shortestTimeFromCityToDestination[i] = distance + shortestTimeFromCityToDestination[cityIndex];
                             nextCity[i] = cities.get(cityIndex);
                             nextCityTmp[i] = new TrainConnection(cities.get(i), graph[i][cityIndex].getFrom(),cities.get(cityIndex), graph[i][cityIndex].getTo());
-                            System.out.println("STATE: " + state.length + " - " + i + " " + cities.get(cityIndex) + " - " +  graph[i][cityIndex].getTo());
                             state[i] = new State(i, graph[i][cityIndex].getTo());
                         }
                         if (!visitedNodes.contains(cities.get(i)))
